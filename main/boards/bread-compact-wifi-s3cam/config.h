@@ -34,6 +34,11 @@
 #define VOLUME_UP_BUTTON_GPIO   GPIO_NUM_NC
 #define VOLUME_DOWN_BUTTON_GPIO GPIO_NUM_NC
 
+// Educational physical buttons (GPIO pins dengan pull-up resistor external)
+#define EDU_BUTTON_1_GPIO       GPIO_NUM_9   // Number facts button (free pin)
+#define EDU_BUTTON_2_GPIO       GPIO_NUM_10  // Guess animal button (free pin)  
+#define EDU_BUTTON_3_GPIO       GPIO_NUM_12  // Simple math button (free pin)
+
 //Camera Config
 #define CAMERA_PIN_D0 GPIO_NUM_11
 #define CAMERA_PIN_D1 GPIO_NUM_9

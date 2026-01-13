@@ -64,8 +64,11 @@ class CompactWifiBoardS3Cam : public WifiBoard {
 private:
  
     Button boot_button_;
-    LcdDisplay* display_;
-     Esp32Camera* camera_;
+    Button edu_button_1_;  // Number facts button
+    Button edu_button_2_;  // Guess animal button
+    Button edu_button_3_;  // Simple math button
+    LcdDisplay* display_ = nullptr;
+    Esp32Camera* camera_ = nullptr;
 
     void InitializeSpi() {
         spi_bus_config_t buscfg = {};
@@ -170,7 +173,11 @@ private:
     }
 
     void InitializeButtons() {
+        ESP_LOGI(TAG, "Initializing buttons...");
+        
+        // Boot button for WiFi config and chat toggle
         boot_button_.OnClick([this]() {
+            ESP_LOGI(TAG, "Boot button clicked");
             auto& app = Application::GetInstance();
             if (app.GetDeviceState() == kDeviceStateStarting) {
                 EnterWifiConfigMode();
@@ -178,11 +185,39 @@ private:
             }
             app.ToggleChatState();
         });
+
+        // Educational Button 1: Number Facts
+        edu_button_1_.OnClick([]() {
+            ESP_LOGI(TAG, "EDU Button 1 clicked: Requesting number facts");
+            auto& app = Application::GetInstance();
+            app.SendTextMessage("Berikan fakta angka yang menarik dan mudah dipahami untuk anak usia 4-9 tahun");
+        });
+
+        // Educational Button 2: Guess Animal
+        edu_button_2_.OnClick([]() {
+            ESP_LOGI(TAG, "EDU Button 2 clicked: Starting animal guessing game");
+            auto& app = Application::GetInstance();
+            app.SendTextMessage("Mulai permainan tebak hewan yang cocok untuk anak usia 4-9 tahun dengan petunjuk sederhana");
+        });
+
+        // Educational Button 3: Simple Math
+        edu_button_3_.OnClick([]() {
+            ESP_LOGI(TAG, "EDU Button 3 clicked: Requesting simple math problem");
+            auto& app = Application::GetInstance();
+            app.SendTextMessage("Berikan soal penjumlahan sederhana yang cocok untuk anak usia 4-9 tahun");
+        });
+
+        ESP_LOGI(TAG, "All buttons initialized - Button 1: GPIO%d, Button 2: GPIO%d, Button 3: GPIO%d", 
+                 EDU_BUTTON_1_GPIO, EDU_BUTTON_2_GPIO, EDU_BUTTON_3_GPIO);
     }
 
 public:
     CompactWifiBoardS3Cam() :
-        boot_button_(BOOT_BUTTON_GPIO) {
+        boot_button_(BOOT_BUTTON_GPIO),
+        edu_button_1_(EDU_BUTTON_1_GPIO),
+        edu_button_2_(EDU_BUTTON_2_GPIO),
+        edu_button_3_(EDU_BUTTON_3_GPIO) {
+        ESP_LOGI(TAG, "Initializing CompactWifiBoardS3Cam");
         InitializeSpi();
         InitializeLcdDisplay();
         InitializeButtons();
@@ -190,7 +225,7 @@ public:
         if (DISPLAY_BACKLIGHT_PIN != GPIO_NUM_NC) {
             GetBacklight()->RestoreBrightness();
         }
-        
+        ESP_LOGI(TAG, "Board initialization complete");
     }
 
     virtual Led* GetLed() override {

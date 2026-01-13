@@ -298,6 +298,31 @@ void McpServer::AddUserOnlyTools() {
                 return true;
             });
     }
+
+    // Educational tools for children (4-9 years old)
+    AddUserOnlyTool("edu.number_facts", "Berikan fakta menarik tentang angka untuk anak-anak",
+        PropertyList(),
+        [](const PropertyList& properties) -> ReturnValue {
+            auto& app = Application::GetInstance();
+            app.SendTextMessage("Berikan fakta angka yang menarik dan mudah dipahami untuk anak usia 4-9 tahun");
+            return "Meminta fakta angka dari server...";
+        });
+
+    AddUserOnlyTool("edu.guess_animal", "Permainan tebak hewan untuk anak-anak",
+        PropertyList(),
+        [](const PropertyList& properties) -> ReturnValue {
+            auto& app = Application::GetInstance();
+            app.SendTextMessage("Mulai permainan tebak hewan yang cocok untuk anak usia 4-9 tahun dengan petunjuk sederhana");
+            return "Memulai permainan tebak hewan...";
+        });
+
+    AddUserOnlyTool("edu.simple_math", "Soal penjumlahan sederhana untuk anak-anak",
+        PropertyList(),
+        [](const PropertyList& properties) -> ReturnValue {
+            auto& app = Application::GetInstance();
+            app.SendTextMessage("Berikan soal penjumlahan sederhana yang cocok untuk anak usia 4-9 tahun");
+            return "Meminta soal matematika sederhana...";
+        });
 }
 
 void McpServer::AddTool(McpTool* tool) {
